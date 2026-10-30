@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Tarot du Club — MVP 3 / 4 / 5 joueurs</title>
+<title>Tarot du Club — V1.2 · 3 / 4 / 5 joueurs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -159,16 +159,84 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
 .small-note{font-size:13px; color:#7a6a55; margin-top:8px; line-height:1.4;}
 .kbd-hint{font-size:12px; color:#9a8a70; text-align:center; margin-top:6px;}
 #chien-area{position:absolute; left:43%; top:8%; transform:translateX(-50%); display:flex; gap:6px; z-index:9;}
-@media (max-width:900px){ :root{--card-w:46px; --card-h:66px;} #rail{width:150px;} }
+@media (max-width:900px){ #rail{width:var(--rail-w);} }
+
+/* ================= V1.2 (30/10/2026) — retours du comité de suivi =================
+   table resserrée · cartes plus grandes et plus hautes · contraste renforcé · responsive */
+:root{
+  --wood:#7b5232; --wood-dark:#553519; --wood-light:#a06f43;
+  --felt:#1f8f4e; --felt-dark:#146b38; --felt-light:#3cbf73;
+  --brass:#f4c242; --ink:#1a120b; --accent:#d8432e; --accent-soft:#f26b50;
+  --card-w:72px; --card-h:104px; --av:58px; --rail-w:200px; --tb-h:54px;
+}
+#felt{left:var(--felt-x,42%); top:var(--felt-y,42%); width:var(--felt-w,60vw); height:var(--felt-h,50vh);
+  border-width:8px; box-shadow:0 0 0 12px var(--wood-dark), 0 14px 34px rgba(0,0,0,.5), inset 0 0 80px rgba(0,0,0,.3);}
+.seat .avatar{width:var(--av); height:var(--av); font-size:calc(var(--av)*.52);}
+.seat.taker .avatar{border-color:#ff8a1f; box-shadow:0 0 0 3px #ff8a1f, 0 4px 14px rgba(0,0,0,.45);}
+.seat.active .avatar{box-shadow:0 0 0 4px #fff, 0 0 24px 8px var(--brass);}
+.seat .role-tag{font-size:12px; font-weight:800; color:#fff; padding:1px 9px; border-radius:9px; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,.35);}
+.role-tag.petite{background:#c99300;} .role-tag.garde{background:#e0661f;} .role-tag.gs{background:#c0392b;} .role-tag.gc{background:#7b2d26;}
+.seat .called-mini{position:absolute; top:0; left:calc(50% + var(--av)*.55); width:34px; height:48px; border-radius:5px; background:#fff;
+  border:2px solid #ff8a1f; box-shadow:0 3px 8px rgba(0,0,0,.45); display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-weight:800; line-height:1; transform:rotate(8deg);}
+.seat .called-mini b{font-size:17px;} .seat .called-mini span{font-size:18px;}
+.seat .called-mini.red{color:#d10a0a;} .seat .called-mini.black{color:#000;}
+.card{border:1.5px solid #3b3227; box-shadow:0 2px 7px rgba(0,0,0,.45); border-radius:calc(var(--card-w)*.11);}
+.card .corner{font-size:calc(var(--card-w)*.27); top:3px; left:5px; font-weight:800;}
+.card .corner .s{font-size:calc(var(--card-w)*.23);}
+.card .pip{font-size:calc(var(--card-w)*.52);}
+.card.red{color:#d10a0a;} .card.black{color:#000;}
+.card.atout{background:linear-gradient(180deg,#fffdf2,#ffe6a0); border-color:#a87800;}
+.card.atout .corner{color:#5e4300 !important;}
+.card.atout .tnum{font-size:calc(var(--card-w)*.42); color:#5e4300; font-weight:800;}
+.card.atout .frame{border-color:#c99300;}
+.card.disabled{filter:grayscale(.85) brightness(.68); cursor:help;}
+#hand-zone{left:var(--felt-x,42%); bottom:0; height:calc(var(--card-h)*1.55);}
+#hand{bottom:calc(var(--card-h)*.2);}
+#hand .card{margin-left:calc(var(--card-w)/-2); transform-origin:50% var(--pivot,340px);
+  transform:translateX(var(--x,0)) rotate(var(--r,0deg)) translateY(var(--lift,0px)) scale(var(--sc,1)); transition:transform .12s;}
+#hand .card.playable:hover{--lift:calc(var(--card-h)*-.2); --sc:1.07;}
+#hand .card.peeking{--lift:calc(var(--card-h)*-.2); --sc:1.07;}
+.slot .card{transform:none;}
+.slot.glow .card{box-shadow:0 0 0 3px var(--brass), 0 0 18px 6px rgba(244,194,66,.9);}
+.fly{position:absolute !important; z-index:35; pointer-events:none; transform:translate(-50%,-50%);
+  transition:left .28s ease-out, top .28s ease-out, transform .28s ease-out, opacity .28s;}
+#bid-bar, #call-bar{left:var(--felt-x,42%); bottom:calc(var(--card-h)*1.55 + 4px);}
+#rail{width:var(--rail-w); top:calc(12px + var(--tb-h));}
+#topbar{left:auto; right:10px; top:8px; width:var(--rail-w); justify-content:flex-end; flex-wrap:wrap; gap:6px;}
+#chien-area{left:var(--felt-x,42%); top:var(--felt-y,42%); transform:translate(-50%,-50%); flex-direction:column; align-items:center; gap:8px;
+  padding:12px 18px 14px; background:rgba(20,14,8,.62); border:2px solid var(--brass); border-radius:16px; pointer-events:none; z-index:12;}
+#chien-area .lbl{color:var(--brass); font-weight:800; font-size:18px; letter-spacing:.5px;}
+#chien-area .row{display:flex; gap:10px;}
+#peek{position:absolute; left:var(--felt-x,42%); bottom:calc(var(--card-h)*1.6 + 6px); transform:translateX(-50%); z-index:26;
+  pointer-events:none; display:flex; flex-direction:column; align-items:center; gap:6px;}
+#peek .nm{background:rgba(20,14,8,.85); color:#fff; font-weight:700; font-size:15px; padding:3px 12px; border-radius:10px; border:1px solid var(--brass); white-space:nowrap;}
+.chip{font-size:15px; font-weight:700; padding:6px 12px; border-radius:16px; background:#efe5d2; color:var(--ink); border:2px solid #d8cbb6;}
+.chip.on{background:var(--accent); color:#fff; border-color:var(--accent);}
+.chip.add{background:#fff; border-style:dashed;}
+#profiles-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
+.dup-row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+.dup-btn{font-size:16px; font-weight:700; padding:9px 16px; border-radius:12px; background:#2b2118; color:var(--brass); border:2px solid var(--brass); box-shadow:0 4px 12px rgba(0,0,0,.35);}
+.dup-btn[disabled]{opacity:.45; cursor:not-allowed;}
+.badge.dup{background:#2b2118; color:var(--brass);}
+.dup-box{margin-top:12px; padding:10px 12px; border-radius:12px; background:#fff7e3; border:2px solid var(--brass);}
+.dup-box h3{margin:0 0 6px !important;}
+#rotate-hint{display:none;}
+@media (orientation:portrait) and (max-width:760px){
+  #rotate-hint:not(.dismissed){display:flex; position:fixed; inset:0; z-index:200; background:rgba(20,14,8,.92); color:#fdf3d8;
+    flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; padding:24px; font-size:20px;}
+}
+@media (max-height:520px){ .top-btn{width:36px; height:36px; font-size:16px;} #donne-panel{font-size:12px; padding:6px 8px;} #journal .ev{font-size:11px;} #my-card{font-size:12px; padding:4px 6px;} #bell{font-size:13px; padding:5px 10px;} .bid-btn{font-size:14px; padding:6px 10px;} }
 </style>
 </head>
 <body>
 <div id="app">
   <!-- ÉCRAN 1 : PROFIL -->
   <div id="screen-profile" class="screen">
-    <h1 class="logo">🃏 Tarot du Club<small>maquette MVP · 3 / 4 / 5 joueurs</small></h1>
+    <h1 class="logo">🃏 Tarot du Club<small>maquette V1.2 · 3 / 4 / 5 joueurs · duplicate</small></h1>
     <div class="panel">
-      <h2>Crée ton profil</h2>
+      <h2>Ton profil</h2>
+      <div class="field"><label>Profils sur ce navigateur</label><div id="profiles-row"></div></div>
       <div class="field">
         <label for="p-pseudo">Pseudo</label>
         <input type="text" id="p-pseudo" maxlength="14" placeholder="Moi" value="Moi">
@@ -183,7 +251,7 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
         <input type="range" id="p-car" min="1" max="6" value="3">
         <div class="scale-labels"><span>🛡 Prudent</span><span>🎲 Casse-cou</span></div>
       </div>
-      <p class="small-note">Ton niveau auto-évalué règle la force des bots à ta table. Modifiable à tout moment via ✏️ dans le rail de la table.</p>
+      <p class="small-note">Ton niveau auto-évalué règle la force des bots à ta table. Plusieurs profils possibles sur un même navigateur (ex. « Marc 1 », « Marc 2 ») : chacun garde ses statistiques et son historique de duplicates.</p>
     </div>
     <button class="cta" id="btn-profile-ok">Entrer au club →</button>
   </div>
@@ -208,7 +276,9 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
         <div class="d">15 cartes chacun<br>Chien de 3 · Appel au Roi<br>Poignées 8 / 10 / 13<br>2 contre 3</div>
       </div>
     </div>
-    <button class="cta secondary" id="btn-back-profile">← Profil</button>
+    <div class="dup-row" id="dup-row"></div>
+    <button class="cta secondary" id="btn-back-profile">👤 Changer de profil</button>
+    <p class="small-note" id="who" style="color:#f3ead9;"></p>
     <p class="small-note" style="color:#f3ead9; max-width:520px; text-align:center;">Même application, trois configurations — règles FFT complètes à chaque table (appel au Roi à 5, marques 2/1 et ±3, seuils de poignées adaptés).</p>
   </div>
 
@@ -217,7 +287,7 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
     <div id="table-wrap">
       <div id="felt"></div>
       <div id="seats"></div>
-      <div id="chien-area"></div>
+      <div id="chien-area" hidden></div>
       <div id="slots"></div>
       <div id="hand-zone"><div id="hand"></div></div>
       <div id="bid-bar" hidden><span class="lbl">À toi de parler :</span></div>
@@ -231,23 +301,19 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
         <button class="top-btn" id="btn-home" title="Changer de table">🏠</button>
         <button class="top-btn" id="btn-pause" title="Pause / réglages">⏸</button>
         <button class="top-btn" id="btn-stats" title="Mes statistiques">📊</button>
+        <button class="top-btn" id="btn-dup" title="Duplicate : rejouer une donne déjà jouée">🏆</button>
         <button class="top-btn" id="btn-proba" title="Probabilités">❓</button>
         <button class="top-btn" id="btn-edit-profile" title="Modifier mon profil">✏️</button>
       </div>
       <div id="bell" hidden>🔔 <span id="bell-txt">À toi de jouer</span></div>
       <div id="toast"></div>
+      <div id="peek" hidden></div>
     </div>
   </div>
 
   <!-- OVERLAYS -->
-  <div class="overlay" id="zoom-overlay" hidden>
-    <div>
-      <div id="zoom-card" style="display:flex;justify-content:center;"></div>
-      <div id="zoom-name"></div>
-      <div style="text-align:center; margin-top:16px;"><button class="cta secondary" id="btn-zoom-back">↩ Retour à la main</button></div>
-      <div class="kbd-hint" style="color:#cbbfa8;">Échap ou tap sur la main pour refermer</div>
-    </div>
-  </div>
+  <div id="rotate-hint"><div style="font-size:56px;">📱↻</div><div>Tourne ton téléphone en <b>paysage</b> pour jouer confortablement.</div>
+    <button class="cta secondary" onclick="this.parentNode.classList.add('dismissed')">Continuer quand même</button></div>
 
   <div class="overlay" id="pause-overlay" hidden>
     <div class="panel">
@@ -291,7 +357,7 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
       <h3>Chances au chien</h3>
       <p style="font-size:15px;" id="proba-chien"></p>
       <h3>Astuce</h3>
-      <p style="font-size:15px;">Survole une carte (ou maintiens le doigt ~200 ms) pour l'afficher en grand — utile pour vérifier les chiffres d'atouts.</p>
+      <p style="font-size:15px;">Un simple clic (ou tap) joue la carte. Survole une carte à la souris — ou garde le doigt appuyé dessus — pour la soulever et lire son nom, sans masquer la table.</p>
       <div style="margin-top:14px;"><button class="cta" id="btn-proba-close" style="font-size:17px;">Fermer</button></div>
     </div>
   </div>
@@ -302,6 +368,7 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
       <div id="score-detail"></div>
       <div style="display:flex; gap:10px; margin-top:16px;">
         <button class="cta" id="btn-next-deal" style="font-size:19px;">Donne suivante →</button>
+        <button class="cta secondary" id="btn-next-dup" style="font-size:19px;">🏆 Duplicate</button>
         <button class="cta secondary" id="btn-score-quit" style="font-size:19px;">Changer de table</button>
       </div>
     </div>
@@ -319,1106 +386,8 @@ h1.logo small{display:block; font-size:18px; font-weight:500; color:var(--brass)
   </div>
 </div>
 <script>
-/* ================================================================
-   TAROT DU CLUB — MVP unifié 3 / 4 / 5 joueurs
-   Moteur FFT : distribution par 3, enchères, chien/écart, appel au
-   Roi (à 5), plis (fournir / couper / surcouper), Excuse, poignées,
-   petit au bout, marque officielle par configuration.
-   ================================================================ */
-'use strict';
-const $ = s => document.querySelector(s);
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-let SPEED = 1; // multiplicateur de tempo
-const T = ms => sleep(ms * SPEED);
-
-const CFG = {
-  3:{cards:24, chien:6, poignees:[13,15,18], targetBots:2},
-  4:{cards:18, chien:6, poignees:[10,13,15], targetBots:3},
-  5:{cards:15, chien:3, poignees:[8,10,13],  targetBots:4},
-};
-const CONTRACTS = [
-  {id:'petite', label:'Petite',        coef:1, cls:'petite'},
-  {id:'garde',  label:'Garde',         coef:2, cls:'garde'},
-  {id:'gs',     label:'Garde sans',    coef:4, cls:'gs'},
-  {id:'gc',     label:'Garde contre',  coef:6, cls:'gc'},
-];
-const TARGET = {0:56, 1:51, 2:41, 3:36};
-const SUIT_ORDER = ['♠','♦','A','♥','♣']; // tri club : noir / rouge / atouts / rouge / noir
-const SUIT_NAME = {'♠':'Pique','♥':'Cœur','♦':'Carreau','♣':'Trèfle'};
-const RANK_LABEL = {11:'Valet',12:'Cavalier',13:'Dame',14:'Roi'};
-
-/* ---------- Bots ---------- */
-const BOT_POOL = [
-  {name:'Léo',   emoji:'🧒', color:'#8fa3c0', level:1}, // débutant
-  {name:'Nadia', emoji:'👩', color:'#c98a5e', level:2}, // intermédiaire
-  {name:'Sacha', emoji:'🦊', color:'#7ba05b', level:2},
-  {name:'Karim', emoji:'🧔', color:'#a06bb4', level:3}, // expérimenté
-];
-const LEVEL_NAMES = {1:'débutant', 2:'intermédiaire', 3:'expérimenté'};
-
-/* ---------- État global ---------- */
-const G = {
-  n:4, players:[], me:0, dealer:-1,
-  phase:'idle',            // deal|bid|call|ecart|play|score
-  chien:[], bids:[], taker:-1, contract:null, called:null, // called: {suit,rank}
-  partner:-1, partnerKnown:false, alone:false,
-  trick:[], trickLeader:0, turn:0, tricksWon:[],  // tricksWon[i] = [cards]
-  ecart:[], petitAuBout:null, poignees:{}, chelemAnnounced:false,
-  discardSel:new Set(), speed:1, music:null, musicOn:false,
-  stats:null, paused:false,
-};
-// stockage local tolérant (certains navigateurs mobiles bloquent localStorage sur les fichiers)
-const store={
-  get:k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } },
-  set:(k,v)=>{ try{ localStorage.setItem(k,v); }catch(e){} },
-  del:k=>{ try{ localStorage.removeItem(k); }catch(e){} },
-};
-const savedProfile = store.get('tarot.profile');
-let PROFILE = savedProfile ? JSON.parse(savedProfile) : {pseudo:'Moi',niveau:3,caractere:3};
-
-function loadStats(){ G.stats = JSON.parse(store.get('tarot.stats.'+G.n) || '{"donnes":0,"prises":0,"reussies":0,"appele":0,"ptsPlus":0,"ptsMoins":0,"petitGagne":0,"petitPerdu":0,"poignees":0}'); }
-function saveStats(){ store.set('tarot.stats.'+G.n, JSON.stringify(G.stats)); }
-
-/* ---------- Cartes ---------- */
-function buildDeck(){
-  const d = [];
-  for(const s of ['♠','♥','♦','♣']) for(let r=1;r<=14;r++)
-    d.push({kind:'suit', suit:s, rank:r, pts: r===14?4.5 : r===13?3.5 : r===12?2.5 : r===11?1.5 : 0.5, id:s+r});
-  for(let a=1;a<=21;a++)
-    d.push({kind:'atout', num:a, pts:(a===1||a===21)?4.5:0.5, id:'A'+a});
-  d.push({kind:'excuse', pts:4.5, id:'EX'});
-  return d; // 78
-}
-const isBout = c => c.kind==='excuse' || (c.kind==='atout' && (c.num===1||c.num===21));
-const isPetit = c => c.kind==='atout' && c.num===1;
-const cardName = c => c.kind==='excuse' ? "L'Excuse — ★ bout"
-  : c.kind==='atout' ? (c.num===1?`Le Petit — atout 1 · ★ bout` : c.num===21?`Le 21 — atout · ★ bout` : `Atout ${c.num}`)
-  : `${RANK_LABEL[c.rank]||c.rank} de ${SUIT_NAME[c.suit]} ${c.suit}${isBout(c)?' · ★ bout':''}`;
-function sortHand(h){
-  h.sort((a,b)=>{
-    const ka = a.kind==='suit' ? SUIT_ORDER.indexOf(a.suit)*100 + a.rank : SUIT_ORDER.indexOf('A')*100 + (a.kind==='atout'?a.num:22);
-    const kb = b.kind==='suit' ? SUIT_ORDER.indexOf(b.suit)*100 + b.rank : SUIT_ORDER.indexOf('A')*100 + (b.kind==='atout'?b.num:22);
-    return ka-kb;
-  });
-}
-const sumPts = cards => cards.reduce((s,c)=>s+c.pts,0);
-const atouts = h => h.filter(c=>c.kind==='atout');
-const rois   = h => h.filter(c=>c.kind==='suit'&&c.rank===14);
-const bouts  = h => h.filter(isBout);
-const rnd = a => a[Math.floor(Math.random()*a.length)];
-
-/* ---------- Journal / toast / clochette ---------- */
-function logEv(txt){
-  const j = $('#journal'); const d = document.createElement('div');
-  d.className='ev'; d.textContent = txt; j.appendChild(d);
-  while(j.children.length>5) j.removeChild(j.firstChild);
-}
-let toastTimer=null;
-function toast(txt, ms=1800){
-  const t=$('#toast'); t.textContent=txt; t.style.opacity=1;
-  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.style.opacity=0, ms);
-}
-let audioCtx=null;
-function bell(){
-  try{
-    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type='sine'; o.frequency.value=1174;
-    g.gain.setValueAtTime(.0001, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.22, audioCtx.currentTime+.02);
-    g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime+.7);
-    o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.75);
-  }catch(e){}
-  $('#bell').hidden=false; clearTimeout(bell._t); bell._t=setTimeout(()=>$('#bell').hidden=true, 2600);
-}
-/* ---------- Musique d'ambiance synthétisée (boucle légère) ---------- */
-function toggleMusic(){
-  try{
-    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
-    if(G.musicOn){ G.musicOn=false; if(G.music) G.music.forEach(n=>{try{n.stop()}catch(e){}}); G.music=null; }
-    else{
-      G.musicOn=true;
-      const master=audioCtx.createGain(); master.gain.value=.045; master.connect(audioCtx.destination);
-      const chords=[[261.6,329.6,392],[220,261.6,329.6],[174.6,220,261.6],[196,246.9,293.7]];
-      let step=0;
-      const nodes=[];
-      const tick=()=>{
-        if(!G.musicOn) return;
-        const ch=chords[step%4]; step++;
-        ch.forEach((f,i)=>{
-          const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-          o.type='triangle'; o.frequency.value=f*(i===0?0.5:1);
-          g.gain.setValueAtTime(.0001,audioCtx.currentTime);
-          g.gain.exponentialRampToValueAtTime(.8,audioCtx.currentTime+.4);
-          g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+2.8);
-          o.connect(g).connect(master); o.start(); o.stop(audioCtx.currentTime+3);
-          nodes.push(o);
-        });
-        G.musicTimer=setTimeout(tick, 2000);
-      };
-      tick(); G.music=nodes;
-    }
-  }catch(e){}
-  $('#music-state').textContent = G.musicOn?'on':'off';
-}
-/* ================================================================
-   DÉMARRAGE D'UNE TABLE
-   ================================================================ */
-function pickBots(){
-  // niveau auto-évalué → composition de la table
-  const niv = PROFILE.niveau;
-  let levels;
-  if(niv<=2)      levels = [1,1,1,1];            // Découverte
-  else if(niv<=4) levels = [1,2,2,3];            // Club
-  else            levels = [2,3,3,3];            // Compétition
-  const pool = [...BOT_POOL].sort(()=>Math.random()-.5);
-  const bots=[];
-  for(let i=0;i<G.n-1;i++){
-    const b=pool[i%pool.length];
-    bots.push({...b, level: levels[Math.min(i,3)] || b.level});
-  }
-  return bots;
-}
-function setupPlayers(){
-  const bots = pickBots();
-  G.players = [{name:PROFILE.pseudo||'Moi', emoji:'🙂', color:'#c94f3d', level:0, human:true}];
-  bots.forEach(b=>G.players.push(b));
-  G.me=0;
-}
-function seatAngles(n){
-  // Moi en bas au centre ; les autres RÉPARTIS RÉGULIÈREMENT autour de la table (retour Marc)
-  if(n===3) return [90, 205, 335];
-  if(n===4) return [90, 180, 270, 0];
-  return [90, 162, 234, 306, 18]; // 72° régulier
-}
-function seatPos(angleDeg){
-  const a=angleDeg*Math.PI/180;
-  return {x:43+37*Math.cos(a), y:44+40*Math.sin(a)}; // % du wrap — ellipse décalée à gauche pour dégager le rail (retour Marc)
-}
-function renderSeats(){
-  const box=$('#seats'); box.innerHTML='';
-  const angles=seatAngles(G.n);
-  // ordre de jeu : Moi=0, puis sens antihoraire : angles croissants décroissants visuellement
-  for(let i=0;i<G.n;i++){
-    const p=G.players[i];
-    // les bots occupent les sièges dans l'ordre du jeu autour de la table
-    const ang=angles[i];
-    const pos=seatPos(ang);
-    const el=document.createElement('div');
-    el.className='seat'+(i===G.me?' me':''); el.id='seat-'+i;
-    el.style.left=pos.x+'%'; el.style.top=pos.y+'%';
-    el.style.setProperty('--sc', p.color);
-    el.innerHTML=`<div class="avatar">${p.emoji}<span class="role-crown" id="crown-${i}" hidden></span></div>
-      <div class="nm">${p.name}</div>`;
-    box.appendChild(el);
-  }
-  renderSlots(angles);
-}
-function renderSlots(angles){
-  const box=$('#slots'); box.innerHTML='';
-  for(let i=0;i<G.n;i++){
-    const a=seatAngles(G.n)[i]*Math.PI/180;
-    const pos={x:43+19*Math.cos(a), y:44+19*Math.sin(a)};
-    const el=document.createElement('div');
-    el.className='slot'; el.id='slot-'+i;
-    el.style.left=pos.x+'%'; el.style.top=pos.y+'%';
-    box.appendChild(el);
-  }
-}
-/* ---------- Rendu des cartes ---------- */
-function cardEl(c, small=false){
-  const el=document.createElement('div');
-  el.className='card';
-  if(c.kind==='suit'){
-    el.classList.add((c.suit==='♥'||c.suit==='♦')?'red':'black');
-    const rl = c.rank>10? {11:'V',12:'C',13:'D',14:'R'}[c.rank] : c.rank;
-    el.innerHTML=`<div class="corner">${rl}<span class="s">${c.suit}</span></div>
-      <div class="pip">${c.suit}</div>
-      <div class="corner br">${rl}<span class="s">${c.suit}</span></div>`;
-  }else if(c.kind==='atout'){
-    el.classList.add('atout');
-    el.innerHTML=`<div class="frame"></div>
-      <div class="corner" style="color:#8a6d1a;">${c.num}<span class="s">✦</span></div>
-      <div class="tnum">${c.num}${isBout(c)?' <span class="star">★</span>':''}</div>
-      <div class="corner br" style="color:#8a6d1a;">${c.num}<span class="s">✦</span></div>`;
-  }else{
-    el.classList.add('excuse');
-    el.innerHTML=`<div class="corner" style="color:#7d5ba6;">EX<span class="s">★</span></div>
-      <div style="font-size:13px;font-weight:700;color:#7d5ba6;text-align:center;line-height:1.1;">L'EXCUSE<br><span class="star">★ bout ★</span></div>
-      <div class="corner br" style="color:#7d5ba6;">EX<span class="s">★</span></div>`;
-  }
-  el.dataset.cid=c.id;
-  return el;
-}
-function renderHand(){
-  const hand=G.players[G.me].hand; sortHand(hand);
-  const box=$('#hand'); box.innerHTML='';
-  const n=hand.length; if(!n) return;
-  // Éventail à arc unique, pivot sous la main ; espacement assez large
-  // pour que le SECOND CHIFFRE des atouts soit entièrement visible (retour Marc)
-  const cardW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-w'));
-  const spread = Math.min(30, (window.innerWidth*0.62)/Math.max(n-1,1)); // px visibles par carte
-  const step = Math.max(spread, 26);
-  const totalArc = Math.min(140, n*4.2);
-  const a0 = -totalArc/2, da = n>1? totalArc/(n-1) : 0;
-  const x0 = -((n-1)*step)/2;
-  hand.forEach((c,i)=>{
-    const el=cardEl(c);
-    const ang=a0+da*i, x=x0+step*i;
-    el.style.transform=`translateX(${x}px) rotate(${ang}deg)`;
-    el.style.zIndex=i+1;
-    if(G.phase==='play' && G.turn===G.me){
-      const legal=legalPlays(hand);
-      if(legal.includes(c)){ el.classList.add('playable'); el.onclick=()=>playHumanCard(c); }
-      else{ el.classList.add('disabled'); el.onclick=()=>explainIllegal(c, hand); }
-    }else if(G.phase==='ecart'){
-      el.classList.add('playable');
-      if(G.discardSel.has(c.id)) el.classList.add('selected');
-      el.onclick=()=>toggleDiscard(c, el);
-    }
-    attachZoom(el, c);
-    box.appendChild(el);
-  });
-}
-// Tap sur une carte grisée → on explique pourquoi elle n'est pas jouable (règles FFT : fournir / couper / surcouper)
-function explainIllegal(c, hand){
-  const lead=ledColor(G.trick);
-  let msg;
-  if(!lead) msg="L'Excuse ouvre le pli : tu peux jouer la carte de ton choix.";
-  else if(lead.kind==='atout'){
-    const best=Math.max(0,...G.trick.filter(t=>t.card.kind==='atout').map(t=>t.card.num));
-    msg = hand.some(x=>x.kind==='atout'&&x.num>best)
-      ? `Obligation de surcouper : joue un atout plus fort que le ${best}.`
-      : "Obligation de jouer atout.";
-  }else if(hand.some(x=>x.kind==='suit'&&x.suit===lead.suit)){
-    msg = `Tu dois fournir à ${SUIT_NAME[lead.suit]} ${lead.suit}.`;
-  }else if(hand.some(x=>x.kind==='atout')){
-    msg = `Pas de ${SUIT_NAME[lead.suit]} ${lead.suit} en main : obligation de couper (joue un atout).`;
-  }else{
-    msg = "Tu n'as ni la couleur demandée ni atout : défausse libre — toutes tes cartes sont jouables.";
-  }
-  toast(msg, 2600);
-}
-function renderTrick(){
-  for(let i=0;i<G.n;i++){
-    const s=$('#slot-'+i); if(!s) continue;
-    s.innerHTML=''; s.classList.remove('glow');
-    const pl=G.trick.find(t=>t.player===i);
-    if(pl) s.appendChild(cardEl(pl.card));
-  }
-}
-function setActive(i){
-  document.querySelectorAll('.seat').forEach(s=>s.classList.remove('active'));
-  const el=$('#seat-'+i); if(el) el.classList.add('active');
-}
-function setBidTag(i, txt, pass=false){
-  const av=$('#seat-'+i+' .avatar'); if(!av) return;
-  av.querySelectorAll('.bid-tag').forEach(t=>t.remove());
-  if(!txt) return;
-  const t=document.createElement('div'); t.className='bid-tag'+(pass?' pass':''); t.textContent=txt;
-  av.appendChild(t);
-}
-function clearBidTags(){ document.querySelectorAll('.bid-tag').forEach(t=>t.remove()); }
-function renderCrowns(){
-  for(let i=0;i<G.n;i++){
-    const cr=$('#crown-'+i); if(!cr) continue;
-    if(i===G.taker){ cr.hidden=false; cr.textContent='👑'; cr.title='Preneur'; }
-    else if(G.partnerKnown && i===G.partner){ cr.hidden=false; cr.textContent='🤝'; cr.title='Appelé'; }
-    else cr.hidden=true;
-  }
-}
-function renderDonnePanel(){
-  const p=$('#donne-panel');
-  let html='';
-  if(G.contract){
-    const c=CONTRACTS.find(x=>x.id===G.contract);
-    html+=`<div class="row"><span>Contrat</span><span class="badge ${c.cls}">${c.label}</span></div>`;
-    html+=`<div class="row"><span>Preneur</span><b>${G.players[G.taker].name}</b></div>`;
-    if(G.n===5){
-      const callLbl = G.called? `${RANK_LABEL[G.called.rank]} de ${SUIT_NAME[G.called.suit]}` : '—';
-      html+=`<div class="row"><span>Appel</span><b>${callLbl}</b></div>`;
-      if(G.alone) html+=`<div class="row"><span></span><span class="badge gs">Seul contre 4</span></div>`;
-      else if(G.partnerKnown) html+=`<div class="row"><span>Appelé</span><span class="badge appele">${G.players[G.partner].name}</span></div>`;
-    }
-    const camps = attackCards();
-    html+=`<div class="row"><span>Points attaque</span><b>${fmtPts(sumPts(camps))}</b></div>`;
-    html+=`<div class="row"><span>Bouts (attaque)</span><b>★ ${camps.filter(isBout).length}</b></div>`;
-  }else{
-    html=`<div style="text-align:center;color:#7a6a55;">Enchères en cours…</div>`;
-  }
-  p.innerHTML=html;
-  $('#my-score').textContent='Marque : '+(G.marque? G.marque[G.me]:0);
-}
-const fmtPts = x => (Math.round(x*2)/2).toString().replace('.',',');
-function attackCards(){
-  // cartes du camp preneur : plis gagnés + écart + main du preneur (le Petit compte dès qu'il est tenu)
-  let cards=[];
-  const camp=attackCamp();
-  camp.forEach(i=>{ (G.tricksWon[i]||[]).forEach(c=>cards.push(c)); });
-  cards=cards.concat(G.ecart);
-  if(G.taker===G.me) cards=cards.concat(G.players[G.me].hand.filter(c=>!G.trick.some(t=>t.card===c)));
-  return cards;
-}
-function attackCamp(){
-  if(G.n!==5) return [G.taker];
-  if(G.alone) return [G.taker];
-  if(G.partnerKnown) return [G.taker, G.partner];
-  return [G.taker];
-}
-/* ================================================================
-   DÉROULEMENT D'UNE DONNE — machine à états robuste
-   ================================================================ */
-async function startTable(n){
-  G.n=n; loadStats(); setupPlayers();
-  G.marque=G.players.map(()=>0);
-  renderSeats();
-  $('#screen-select').hidden=true; $('#screen-table').hidden=false;
-  $('#my-name').textContent=PROFILE.pseudo||'Moi';
-  updateProbaPanel();
-  await newDeal();
-}
-async function newDeal(){
-  const deal=(G.dealId=(G.dealId||0)+1); // jeton : toute boucle d'une donne abandonnée s'arrête
-  const alive=()=>deal===G.dealId;
-  G.phase='deal'; G.chien=[]; G.bids=[]; G.taker=-1; G.contract=null;
-  G.called=null; G.partner=-1; G.partnerKnown=false; G.alone=false;
-  G.trick=[]; G.tricksWon=G.players.map(()=>[]); G.ecart=[];
-  G.petitAuBout=null; G.poignees={}; G.discardSel=new Set();
-  G.dealer=(G.dealer+1)%G.n;
-  G.players.forEach(p=>p.hand=[]);
-  clearBidTags(); renderCrowns(); renderDonnePanel(); renderTrick(); renderHand();
-  $('#chien-area').innerHTML='';
-  // Distribution ANIMÉE et visible (retour Marc : voir la donne se faire)
-  const deck=buildDeck().sort(()=>Math.random()-.5);
-  const cfg=CFG[G.n];
-  const first=(G.dealer+1)%G.n;
-  let idx=0;
-  toast('Distribution…', cfg.cards*G.n*70);
-  // paquets de 3 par joueur, chien pioché en cours de distribution
-  // (emplacements du chien DISTINCTS : un doublon amputait le chien et la main du preneur — bug bloquant)
-  const chienQueue=[]; for(let i=0;i<cfg.chien;i++) chienQueue.push(deck[idx++]);
-  const chienSlots=new Set(); while(chienSlots.size<cfg.chien) chienSlots.add(Math.floor(Math.random()*(cfg.cards/3)));
-  for(let pkt=0; pkt<cfg.cards/3; pkt++){
-    for(let j=0;j<G.n;j++){
-      if(!alive()) return; // donne abandonnée (changement de table)
-      const pi=(first+j)%G.n;
-      if(chienSlots.has(pkt) && chienQueue.length && j===Math.floor(G.n/2)){
-        G.chien.push(chienQueue.shift());
-        flyCard('chien'); await T(90);
-      }
-      for(let k=0;k<3;k++){
-        const c=deck[idx++]; G.players[pi].hand.push(c);
-        flyCardToSeat(pi);
-      }
-      if(pi===G.me) renderHand();
-      await T(110);
-    }
-  }
-  G.chien.push(...chienQueue); // sécurité : le chien est TOUJOURS complet
-  // invariant FFT : chaque main a exactement cfg.cards cartes, le chien cfg.chien
-  if(G.players.some(p=>p.hand.length!==cfg.cards) || G.chien.length!==cfg.chien){
-    console.warn('distribution invalide — on redonne');
-    logEv('Erreur de distribution — on redonne');
-    if(alive()) return newDeal();
-    return;
-  }
-  renderHand();
-  logEv(`Donne par ${G.players[G.dealer].name}`);
-  await T(400);
-  if(deal===G.dealId) runBidding(deal);
-}
-function flyCardToSeat(i){
-  const seat=$('#seat-'+i); if(!seat) return;
-  const r=seat.getBoundingClientRect(), w=$('#table-wrap').getBoundingClientRect();
-  const d=document.createElement('div'); d.className='deal-pile';
-  d.style.left=(w.left+w.width/2 - w.left)+'px'; d.style.top=(w.top+80 - w.top)+'px';
-  $('#table-wrap').appendChild(d);
-  requestAnimationFrame(()=>{ d.style.left=(r.left+r.width/2-w.left)+'px'; d.style.top=(r.top+r.height/2-w.top)+'px'; });
-  setTimeout(()=>{d.style.opacity=0; setTimeout(()=>d.remove(),300);},300);
-}
-function flyCard(where){
-  const d=document.createElement('div'); d.className='deal-pile';
-  d.style.left='50%'; d.style.top='80px'; $('#table-wrap').appendChild(d);
-  setTimeout(()=>{d.style.opacity=0; setTimeout(()=>d.remove(),300);},250);
-}
-
-/* ================================================================
-   ENCHÈRES — jamais bloquantes : tout le monde passe → on redonne
-   ================================================================ */
-function evalBid(hand){
-  const nA=atouts(hand).length, nB=bouts(hand).length, nR=rois(hand).length;
-  const strongA=atouts(hand).filter(c=>c.num>=16).length;
-  const pts=sumPts(hand);
-  let s = nA*1.7 + nB*6 + nR*2.4 + strongA*1.2 + Math.max(0,pts-20)*0.18;
-  if(hand.some(isPetit)) s+=1.5;
-  return s;
-}
-function botBidChoice(p, currentIdx){
-  const s=evalBid(p.hand);
-  const n=G.n;
-  // seuils adaptés à la taille de main + soupçon d'aléa pour un comportement crédible
-  // (calibrés pour que les bots PRENNENT régulièrement — retour Marc : « tous les joueurs passent »)
-  const base = CFG[n].cards*0.72; // 3j≈17 · 4j≈13 · 5j≈11
-  const jitter = (Math.random()*6-3) + (p.level-2)*1.5;
-  const v=s+jitter;
-  let want=-1;
-  if(v>=base+17) want=3; else if(v>=base+11) want=2; else if(v>=base+5) want=1; else if(v>=base) want=0;
-  if(want<=currentIdx) return null;
-  return want;
-}
-async function runBidding(deal){
-  const alive=()=>deal===undefined||deal===G.dealId;
-  G.phase='bid'; renderDonnePanel();
-  const start=(G.dealer+1)%G.n;
-  let best=-1, bestPlayer=-1, passCount=0;
-  for(let k=0;k<G.n;k++){
-    const i=(start+k)%G.n;
-    if(!alive()) return;
-    G.turn=i; setActive(i);
-    if(i===G.me){
-      const choice=await humanBid(best);
-      if(!alive()) return;
-      if(choice===null){ setBidTag(i,'Passe',true); passCount++; logEv('Moi : Passe'); }
-      else{ best=choice; bestPlayer=i; passCount=0; setBidTag(i,CONTRACTS[choice].label); logEv(`Moi : ${CONTRACTS[choice].label}`); }
-    }else{
-      await T(700+Math.random()*600);
-      if(!alive()) return;
-      const c=botBidChoice(G.players[i], best);
-      if(c===null){ setBidTag(i,'Passe',true); passCount++; logEv(`${G.players[i].name} : Passe`); }
-      else{ best=c; bestPlayer=i; passCount=0; setBidTag(i,CONTRACTS[c].label); logEv(`${G.players[i].name} : ${CONTRACTS[c].label}`); toast(`${G.players[i].name} : ${CONTRACTS[c].label}`); }
-    }
-    // Si un joueur a enchéri et que TOUS les autres ont passé → fin immédiate
-    if(bestPlayer>=0 && passCount>=G.n-1) break;
-  }
-  setActive(-1);
-  if(!alive()) return;
-  if(bestPlayer<0){
-    toast('Tout le monde passe — on redonne 🔄', 2200);
-    logEv('Donne annulée (tout le monde passe)');
-    await T(1600);
-    if(alive()) return newDeal(); // jamais bloqué (retour Marc)
-    return;
-  }
-  G.taker=bestPlayer; G.contract=CONTRACTS[best].id;
-  toast(`${G.players[bestPlayer].name} prend : ${CONTRACTS[best].label}`, 2000);
-  renderCrowns(); renderDonnePanel();
-  await T(1200);
-  clearBidTags();
-  if(G.n===5) await runCallKing();
-  await runChien();
-}
-function humanBid(currentIdx){
-  return new Promise(res=>{
-    const bar=$('#bid-bar');
-    bar.querySelectorAll('button').forEach(b=>b.remove());
-    const mk=(label,cls,val)=>{
-      const b=document.createElement('button');
-      b.className='bid-btn'+cls; b.textContent=label;
-      b.onclick=()=>{ bar.hidden=true; res(val); };
-      bar.appendChild(b);
-    };
-    mk('Passe',' pass', null);
-    CONTRACTS.forEach((c,idx)=>{ if(idx>currentIdx) mk(c.label,'',idx); });
-    $('#bell-txt').textContent='À toi de parler';
-    bar.hidden=false; bell();
-  });
-}
-
-/* ---------- Appel au Roi (5 joueurs) ---------- */
-async function runCallKing(){
-  G.phase='call';
-  if(G.phase==='idle') return;
-  const meTaker=G.taker===G.me;
-  const hand=G.players[G.taker].hand;
-  // hiérarchie FFT : Roi, sinon Dame (4 rois en main), sinon Cavalier (4 dames)
-  let rank=14;
-  const countRank=r=>hand.filter(c=>c.kind==='suit'&&c.rank===r).length;
-  if(countRank(14)>=4) rank=13;
-  if(rank===13 && countRank(13)>=4) rank=12;
-  const choices=['♠','♥','♦','♣'].map(s=>({suit:s, rank}));
-  if(meTaker){
-    toast(`Tu prends : appelle un ${RANK_LABEL[rank]} (avant le chien)`, 2600);
-    G.called=await humanCall(choices, hand);
-  }else{
-    await T(900);
-    // bot : appelle la couleur où il n'a pas le Roi et le moins de cartes
-    const noKing=choices.filter(c=>!hand.some(x=>x.kind==='suit'&&x.suit===c.suit&&x.rank===c.rank));
-    const pool=noKing.length?noKing:choices;
-    pool.sort((a,b)=>hand.filter(x=>x.kind==='suit'&&x.suit===a.suit).length - hand.filter(x=>x.kind==='suit'&&x.suit===b.suit).length);
-    G.called=pool[0];
-    toast(`${G.players[G.taker].name} appelle le ${RANK_LABEL[rank]} de ${SUIT_NAME[G.called.suit]} ${G.called.suit}`, 2200);
-  }
-  logEv(`Appel : ${RANK_LABEL[rank]} de ${SUIT_NAME[G.called.suit]} ${G.called.suit}`);
-  // Le preneur possède lui-même la carte appelée → seul contre 4
-  if(hand.some(c=>c.kind==='suit'&&c.suit===G.called.suit&&c.rank===G.called.rank)){
-    G.alone=true; G.partner=G.taker; G.partnerKnown=true;
-    toast(`${G.players[G.taker].name} s'appelle lui-même : 1 contre 4 !`, 2400);
-  }
-  renderDonnePanel();
-  await T(1200);
-}
-function humanCall(choices, hand){
-  return new Promise(res=>{
-    const bar=$('#call-bar');
-    bar.querySelectorAll('button').forEach(b=>b.remove());
-    choices.forEach(ch=>{
-      const mine=hand.some(c=>c.kind==='suit'&&c.suit===ch.suit&&c.rank===ch.rank);
-      const b=document.createElement('button');
-      b.className='call-btn '+((ch.suit==='♥'||ch.suit==='♦')?'red':'black');
-      b.textContent=`${RANK_LABEL[ch.rank]} ${ch.suit}${mine?' (en main)':''}`;
-      b.onclick=()=>{ bar.hidden=true; res(ch); };
-      bar.appendChild(b);
-    });
-    $('#bell-txt').textContent=`À toi d'appeler`;
-    bar.hidden=false; bell();
-  });
-}
-/* ================================================================
-   CHIEN & ÉCART
-   ================================================================ */
-async function runChien(deal){
-  const alive=()=>deal===undefined||deal===G.dealId;
-  G.phase='chien';
-  // Révélation du chien, côte à côte
-  const area=$('#chien-area'); area.innerHTML='';
-  if(G.contract!=='gc'){
-    for(const c of G.chien){ area.appendChild(cardEl(c)); await T(350); }
-    await T(1400);
-  }
-  if(G.contract==='petite' || G.contract==='garde'){
-    logEv(`Chien révélé (${G.chien.length} cartes)`);
-    if(G.taker===G.me){
-      // écart interactif
-      G.players[G.me].hand.push(...G.chien);
-      G.chien=[];
-      sortHand(G.players[G.me].hand);
-      G.phase='ecart'; G.discardSel=new Set();
-      toast(`Fais ton écart : choisis ${CFG[G.n].chien} cartes (ni bouts ni rois)`, 3200);
-      renderHand();
-      await waitEcart();
-      if(!alive()) return;
-    }else{
-      toast(`${G.players[G.taker].name} fait son écart…`, 2000);
-      botEcart();
-      await T(1600);
-      if(!alive()) return;
-    }
-    area.innerHTML='';
-  }else{
-    logEv(G.contract==='gs' ? 'Garde sans : le chien est réservé au preneur' : 'Garde contre : le chien va à la défense');
-    area.innerHTML='';
-    await T(800);
-  }
-  renderHand(); renderDonnePanel();
-  await runPoignees();
-  if(!alive()) return;
-  runPlay(deal);
-}
-function toggleDiscard(c, el){
-  const need=CFG[G.n].chien;
-  if(G.discardSel.has(c.id)){ G.discardSel.delete(c.id); el.classList.remove('selected'); return; }
-  if(isBout(c)||(c.kind==='suit'&&c.rank===14)){ toast('Interdit d\'écarter un bout ou un roi (FFT)'); return; }
-  if(G.discardSel.size>=need){ toast(`Écart déjà complet (${need} cartes) — reclique une carte pour la retirer`); return; }
-  G.discardSel.add(c.id); el.classList.add('selected');
-  if(G.discardSel.size===need) confirmEcart();
-}
-function waitEcart(){ return new Promise(res=>{ G._ecartDone=res; }); }
-async function confirmEcart(){
-  const hand=G.players[G.me].hand;
-  G.ecart=hand.filter(c=>G.discardSel.has(c.id));
-  G.players[G.me].hand=hand.filter(c=>!G.discardSel.has(c.id));
-  logEv(`Écart fait (${G.ecart.length} cartes)`);
-  G.phase='play-prep'; renderHand();
-  await T(500);
-  if(G._ecartDone){ const r=G._ecartDone; G._ecartDone=null; r(); }
-}
-function botEcart(){
-  const p=G.players[G.taker];
-  p.hand.push(...G.chien); G.chien=[];
-  const need=CFG[G.n].chien;
-  const ok=c=>!isBout(c) && !(c.kind==='suit'&&c.rank===14);
-  // jette les cartes de couleur les plus faibles, puis atouts faibles si nécessaire
-  const cand=p.hand.filter(ok).sort((a,b)=>{
-    const va=(a.kind==='atout'? a.num*0.05 : a.pts) , vb=(b.kind==='atout'? b.num*0.05 : b.pts);
-    return va-vb;
-  });
-  G.ecart=cand.slice(0,need);
-  const ids=new Set(G.ecart.map(c=>c.id));
-  p.hand=p.hand.filter(c=>!ids.has(c.id));
-}
-/* ---------- Poignées ---------- */
-function poigneeOf(hand){
-  const nA=atouts(hand).length; const th=CFG[G.n].poignees;
-  if(nA>=th[2]) return {n:nA, val:40, label:`Triple poignée (${th[2]} atouts)`};
-  if(nA>=th[1]) return {n:nA, val:30, label:`Double poignée (${th[1]} atouts)`};
-  if(nA>=th[0]) return {n:nA, val:20, label:`Poignée (${th[0]} atouts)`};
-  return null;
-}
-async function runPoignees(){
-  G.phase='poignee';
-  for(let i=0;i<G.n;i++){
-    const pg=poigneeOf(G.players[i].hand);
-    if(!pg) continue;
-    if(i===G.me){
-      const yes=await askPoignee(pg);
-      if(yes){ G.poignees[i]=pg; logEv(`Moi : ${pg.label} déclarée`); toast(`${pg.label} déclarée !`); }
-    }else if(Math.random()<0.9){
-      G.poignees[i]=pg; logEv(`${G.players[i].name} déclare une ${pg.label.toLowerCase()}`);
-      toast(`${G.players[i].name} : ${pg.label.toLowerCase()} !`, 2200); await T(1100);
-      if(G.phase==='idle') return;
-    }
-  }
-}
-function askPoignee(pg){
-  return new Promise(res=>{
-    $('#poignee-txt').textContent=`Tu as ${pg.n} atouts — ${pg.label} (+${pg.val} pts). La déclarer ?`;
-    $('#poignee-overlay').hidden=false;
-    $('#btn-poignee-yes').onclick=()=>{ $('#poignee-overlay').hidden=true; res(true); };
-    $('#btn-poignee-no').onclick =()=>{ $('#poignee-overlay').hidden=true; res(false); };
-    $('#bell-txt').textContent='Poignée possible !'; bell();
-  });
-}
-/* ================================================================
-   JEU DES PLIS — règles FFT : fournir, couper, surcouper, Excuse
-   ================================================================ */
-function ledColor(trick){
-  // la couleur demandée = première carte non-Excuse du pli
-  for(const t of trick){ if(t.card.kind!=='excuse') return t.card; }
-  return null;
-}
-function legalPlays(hand){
-  const pl=hand; if(!pl.length) return [];
-  // ENTRAME (premier à jouer)
-  if(!G.trick.length){
-    // à 5 : interdiction d'entamer dans la couleur appelée tant que le partenaire n'est pas révélé,
-    // sauf en jouant la carte appelée elle-même
-    if(G.n===5 && G.called && !G.partnerKnown){
-      const legal=pl.filter(c=> !(c.kind==='suit'&&c.suit===G.called.suit) || (c.kind==='suit'&&c.suit===G.called.suit&&c.rank===G.called.rank));
-      if(legal.length) return legal;
-    }
-    return [...pl];
-  }
-  const lead=ledColor(G.trick);
-  if(!lead) return [...pl]; // Excuse en tête (cas rarissime) : libre
-  const bestAtoutOnTable=Math.max(0,...G.trick.filter(t=>t.card.kind==='atout').map(t=>t.card.num));
-  if(lead.kind==='atout'){
-    const myAtouts=pl.filter(c=>c.kind==='atout');
-    if(myAtouts.length){
-      const higher=myAtouts.filter(c=>c.num>bestAtoutOnTable);
-      const forced=higher.length?higher:myAtouts;
-      return forced.concat(pl.filter(c=>c.kind==='excuse'));
-    }
-    return [...pl];
-  }
-  // couleur demandée
-  const inSuit=pl.filter(c=>c.kind==='suit'&&c.suit===lead.suit);
-  if(inSuit.length) return inSuit.concat(pl.filter(c=>c.kind==='excuse'));
-  // pas la couleur → obligation de couper
-  const myAtouts=pl.filter(c=>c.kind==='atout');
-  if(myAtouts.length){
-    if(bestAtoutOnTable>0){
-      const higher=myAtouts.filter(c=>c.num>bestAtoutOnTable);
-      const forced=higher.length?higher:myAtouts; // surcouper si possible, sinon pisser
-      return forced.concat(pl.filter(c=>c.kind==='excuse'));
-    }
-    return myAtouts.concat(pl.filter(c=>c.kind==='excuse'));
-  }
-  return [...pl];
-}
-function trickWinner(trick){
-  const lead=ledColor(trick);
-  let win=trick[0];
-  for(const t of trick){
-    const c=t.card, w=win.card;
-    if(c.kind==='excuse') continue;
-    if(w.kind==='excuse'){ win=t; continue; }
-    if(c.kind==='atout'){ if(w.kind!=='atout'||c.num>w.num) win=t; }
-    else if(lead && c.kind==='suit' && c.suit===lead.suit && (w.kind!=='suit'||w.suit!==lead.suit||c.rank>w.rank)){
-      if(w.kind==='atout') continue; else win=t;
-    }
-  }
-  return win;
-}
-function sameTeam(a,b){
-  if(a===b) return true;
-  const camp=attackCamp();
-  return camp.includes(a)===camp.includes(b);
-}
-function botPlayCard(p){
-  const legal=legalPlays(p.hand);
-  const L=p.level||1;
-  // FFT (tous niveaux) : jamais l'Excuse au dernier pli — avec 2 cartes en main, on s'en défausse
-  // MAINTENANT, sinon elle serait forcée au dernier pli et changerait de camp (régression signalée par Marc)
-  const excLegal=legal.find(c=>c.kind==='excuse');
-  if(excLegal && legal.length>1 && p.hand.length===2) return excLegal;
-  const pick=rnd(legal);
-  if(L===1) return pick; // débutant : légal aléatoire
-  const trick=G.trick, lead=ledColor(trick);
-  const currentWin=trick.length? trickWinner(trick) : null;
-  const isWinning=c=>{
-    const sim=trick.concat([{player:G.players.indexOf(p), card:c}]);
-    return trickWinner(sim).card===c;
-  };
-  const nonBout=c=>!isBout(c)&&c.kind!=='excuse';
-  const cheap=list=>[...list].sort((a,b)=>a.pts-b.pts || ((a.num||a.rank)-(b.num||b.rank)))[0];
-  // niveaux 2+ : en cours de donne, l'Excuse est réservée comme défausse sûre
-  let pool=legal;
-  if(excLegal && legal.length>1 && L>=2) pool=legal.filter(c=>c.kind!=='excuse');
-  // protection du Petit : ne le jouer pour prendre que si CERTAIN de gagner
-  const petitIn=pool.find(isPetit);
-  const atoutsRestantsAilleurs = ()=>{
-    const played=G.tricksWon.flat().concat(G.trick.map(t=>t.card)).concat(p.hand);
-    const playedAtouts=new Set(played.filter(c=>c.kind==='atout').map(c=>c.num));
-    let maxOut=0;
-    for(let a=21;a>=1;a--) if(!playedAtouts.has(a)){ maxOut=a; break; }
-    return maxOut;
-  };
-  if(!trick.length){
-    // ENTRAME
-    if(L>=3){
-      // preneur fort en atouts → faire tomber les atouts ; sinon longue
-      const myA=atouts(p.hand);
-      const iamTaker=G.players.indexOf(p)===G.taker;
-      if(iamTaker && myA.length>=Math.ceil(p.hand.length/3)){
-        const c=cheap(myA.filter(nonBout))||cheap(myA);
-        if(c&&pool.includes(c)) return c;
-      }
-      // chasse au petit en défense : petit atout d'entame
-      if(!iamTaker && myA.some(c=>c.num<=6)){
-        const c=cheap(myA.filter(c=>c.num<=6));
-        if(c&&pool.includes(c)) return c;
-      }
-    }
-    const suits=pool.filter(c=>c.kind==='suit'&&c.rank<14);
-    return cheap(suits)||cheap(pool.filter(nonBout))||pool[0];
-  }
-  // EN COURS DE PLI
-  const winners=pool.filter(c=>isWinning(c));
-  const partnerWinning=currentWin && sameTeam(currentWin.player, G.players.indexOf(p));
-  if(partnerWinning && L>=2){
-    // charge le partenaire : carte à points non-bout la plus forte
-    const give=pool.filter(nonBout).sort((a,b)=>b.pts-a.pts)[0];
-    if(give) return give;
-    return pool[0];
-  }
-  if(winners.length){
-    if(petitIn && winners.includes(petitIn)){
-      // certitude requise pour risquer le Petit
-      const sure = petitIn.num > atoutsRestantsAilleurs() || (!lead || lead.kind!=='atout') && trick.every(t=>t.card.kind!=='atout');
-      if(!sure && pool.length>1){
-        const alt=winners.filter(c=>!isPetit(c));
-        if(alt.length) return cheap(alt);
-        const discard=pool.filter(c=>!winners.includes(c)&&nonBout(c));
-        if(discard.length) return cheap(discard);
-      }
-    }
-    return cheap(winners.filter(nonBout))||cheap(winners);
-  }
-  // perdant → défausse économique (jamais de bout)
-  return cheap(pool.filter(nonBout))||cheap(pool.filter(c=>c.kind!=='excuse'))||pool[0];
-}
-async function runPlay(deal){
-  const alive=()=>deal===undefined||deal===G.dealId;
-  G.phase='play';
-  G.trickLeader=(G.dealer+1)%G.n;
-  const totalTricks=G.players[0].hand.length + (G.taker===G.me?0:0);
-  while(G.players.some(p=>p.hand.length)){
-    G.trick=[]; renderTrick();
-    for(let k=0;k<G.n;k++){
-      if(!alive()) return;
-      const i=(G.trickLeader+k)%G.n;
-      G.turn=i; setActive(i);
-      let card;
-      if(i===G.me){
-        $('#bell-txt').textContent='À toi de jouer';
-        renderHand(); bell();
-        card=await waitHumanCard();
-      }else{
-        renderHand();
-        await T(650+Math.random()*550);
-        card=botPlayCard(G.players[i]);
-      }
-      if(!alive()||!card) return; // donne abandonnée en cours de pli
-      // jouer la carte
-      const hand=G.players[i].hand;
-      const ci=hand.indexOf(card); if(ci<0) return;
-      hand.splice(ci,1);
-      G.trick.push({player:i, card});
-      // révélation de l'appelé à 5
-      if(G.n===5 && G.called && !G.partnerKnown && card.kind==='suit' && card.suit===G.called.suit && card.rank===G.called.rank){
-        G.partner=i; G.partnerKnown=true;
-        if(i===G.taker){ G.alone=true; toast(`${G.players[i].name} joue la carte appelée… il était SEUL !`, 2400); }
-        else toast(`🤝 ${G.players[i].name} est l'appelé de ${G.players[G.taker].name} !`, 2400);
-        logEv(`Appelé révélé : ${G.players[i].name}`);
-        renderCrowns(); renderDonnePanel();
-        await T(1300);
-      }
-      renderTrick(); renderHand();
-      await T(450);
-    }
-    const win=trickWinner(G.trick);
-    G.trickLeader=win.player;
-    const cards=G.trick.map(t=>t.card);
-    G.tricksWon[win.player].push(...cards);
-    // gestion Excuse : elle reste à son camp (sauf dernier pli)
-    const exc=G.trick.find(t=>t.card.kind==='excuse');
-    if(exc && exc.player!==win.player){
-      const lastTrick = !G.players.some(p=>p.hand.length);
-      if(!lastTrick){
-        // retourne dans le camp de son propriétaire ; échange d'une carte 0,5 différé en fin de donne
-        G.tricksWon[win.player]=G.tricksWon[win.player].filter(c=>c.kind!=='excuse');
-        G.tricksWon[exc.player].push(exc.card);
-        G._excuseSwap=G._excuseSwap||[]; G._excuseSwap.push({from:win.player, to:exc.player});
-      }
-    }
-    logEv(`${G.players[win.player].name} remporte le pli`);
-    $('#slot-'+win.player).classList.add('glow');
-    await T(950);
-    G.trick=[]; renderTrick();
-  }
-  await T(600);
-  if(alive()) scoreDeal();
-}
-function waitHumanCard(){ return new Promise(res=>{ G._humanPlay=res; }); }
-function playHumanCard(c){
-  if(G.phase!=='play'||G.turn!==G.me) return;
-  if(!legalPlays(G.players[G.me].hand).includes(c)) return;
-  if(G._humanPlay){ const r=G._humanPlay; G._humanPlay=null; r(c); }
-}
-/* ================================================================
-   MARQUE FFT
-   ================================================================ */
-function scoreDeal(){
-  G.phase='score';
-  const n=G.n, taker=G.taker, contract=CONTRACTS.find(c=>c.id===G.contract);
-  // --- attribution des cartes ---
-  const campAtt=attackCamp();
-  let attCards=[], defCards=[];
-  for(let i=0;i<n;i++){
-    if(campAtt.includes(i)) attCards.push(...G.tricksWon[i]);
-    else defCards.push(...G.tricksWon[i]);
-  }
-  attCards.push(...G.ecart);
-  if(contract.id==='gs') attCards.push(...G.chien);
-  if(contract.id==='gc') defCards.push(...G.chien);
-  // échanges différés de l'Excuse : le camp qui l'a rendue donne une carte 0,5 en retour
-  (G._excuseSwap||[]).forEach(sw=>{
-    const giver = campAtt.includes(sw.to)? attCards : defCards;
-    const recv  = campAtt.includes(sw.to)? defCards : attCards;
-    const idx=giver.findIndex(c=>c.pts===0.5 && !isBout(c) && c.kind!=='excuse');
-    if(idx>=0){ recv.push(giver.splice(idx,1)[0]); }
-  });
-  G._excuseSwap=[];
-  // Excuse jouée au dernier pli → elle change de camp (déjà restée chez le vainqueur du dernier pli : rien à faire,
-  // le retour automatique a été inhibé au dernier pli)
-  // un camp sans AUCUN pli ne peut conserver l'Excuse : elle part chez l'adversaire
-  const noTrick=(cards,playerSet)=> G.players.every((p,i)=>!playerSet.includes(i) || (G.tricksWon[i]||[]).length===0);
-  // (cas limite couvert implicitement par l'échange ci-dessus)
-  const ptsAtt=sumPts(attCards);
-  const nBouts=attCards.filter(isBout).length;
-  const target=TARGET[nBouts];
-  const diff=Math.round((ptsAtt-target)*2)/2;
-  const success=diff>=0;
-  const base=(25+Math.abs(diff))*contract.coef;
-  // petit au bout : le Petit dans le DERNIER pli → prime au camp vainqueur de ce pli
-  const lastTrickWinner=G.trickLeader; // vainqueur du dernier pli
-  let petitPrime=0, petitCamp=null;
-  // on retrouve le petit dans le dernier pli via tricksWon du vainqueur (dernières cartes)
-  const lastCards=G.tricksWon[lastTrickWinner].slice(-n);
-  if(lastCards.some(isPetit)){ petitPrime=10*contract.coef; petitCamp=campAtt.includes(lastTrickWinner)?'att':'def'; }
-  // poignées
-  let poigneeAtt=0, poigneeDef=0;
-  Object.entries(G.poignees).forEach(([i,pg])=>{
-    const inAtt=campAtt.includes(+i);
-    if(inAtt) poigneeAtt+=pg.val; else poigneeDef+=pg.val;
-  });
-  // chelem (non annoncé : +200 ; le camp gagne TOUS les plis)
-  const attAll = G.players.every((p,i)=> !campAtt.includes(i) ? (G.tricksWon[i]||[]).length===0 : true);
-  const defAll = G.players.every((p,i)=>  campAtt.includes(i) ? (G.tricksWon[i]||[]).length===0 : true);
-  let chelem=0;
-  if(attAll) chelem=200; else if(defAll) chelem=-200;
-  let value=(success?1:-1)*base;
-  if(petitCamp==='att') value+=(success?1:-1)*petitPrime; else if(petitCamp==='def') value-=(success?1:-1)*petitPrime;
-  value+=(success?1:-1)*(poigneeAtt)- (success?1:-1)*poigneeDef*0; // primes poignée défense : déduites
-  if(poigneeDef) value-=(success?1:-1)*poigneeDef;
-  value+=chelem;
-  value=Math.round(value);
-  // --- marque par configuration ---
-  const deltas=G.players.map(()=>0);
-  const v=Math.abs(value)* (success?1:-1);
-  if(n===3){ deltas[taker]=2*v; G.players.forEach((_,i)=>{ if(i!==taker) deltas[i]=-v; }); }
-  else if(n===4){ deltas[taker]=3*v; G.players.forEach((_,i)=>{ if(i!==taker) deltas[i]=-v; }); }
-  else{
-    if(G.alone){ deltas[taker]=4*v; G.players.forEach((_,i)=>{ if(i!==taker) deltas[i]=-v; }); }
-    else{
-      const partner=G.partner>=0?G.partner:taker;
-      deltas[taker]=2*v; deltas[partner]+=1*v;
-      G.players.forEach((_,i)=>{ if(i!==taker&&i!==partner) deltas[i]=-v; });
-    }
-  }
-  deltas.forEach((d,i)=>{ G.marque[i]+=d; });
-  // --- statistiques locales ---
-  G.stats.donnes++;
-  if(G.taker===G.me){ G.stats.prises++; if(success) G.stats.reussies++; }
-  if(n===5 && G.partnerKnown && G.partner===G.me) G.stats.appele++;
-  deltas[G.me]>0 ? G.stats.ptsPlus+=deltas[G.me] : G.stats.ptsMoins+=-deltas[G.me];
-  if(petitCamp){ const mine=(petitCamp==='att')===campAtt.includes(G.me); if(mine) G.stats.petitGagne++; else G.stats.petitPerdu++; }
-  if(G.poignees[G.me]) G.stats.poignees++;
-  saveStats();
-  // --- affichage ---
-  const role = G.taker===G.me ? 'Preneur' : (n===5&&G.partner===G.me&&G.partnerKnown)?'Appelé':'Défense';
-  $('#score-title').textContent = success
-    ? `✅ ${G.players[taker].name} réussit sa ${contract.label}` : `❌ ${G.players[taker].name} chute sa ${contract.label}`;
-  let html=`<table class="score-table">
-    <tr><td>Points de l'attaque</td><td><b>${fmtPts(ptsAtt)}</b> / ${target} (${nBouts} bout${nBouts>1?'s':''})</td></tr>
-    <tr><td>Écart</td><td>${diff>=0?'+':''}${fmtPts(diff)}</td></tr>
-    <tr><td>Base (25 + |écart|) × ${contract.coef}</td><td>${base}</td></tr>`;
-  if(petitPrime) html+=`<tr><td>Petit au bout (${petitCamp==='att'?'attaque':'défense'})</td><td>${petitCamp==='att'?'+':'−'}${petitPrime}</td></tr>`;
-  if(poigneeAtt) html+=`<tr><td>Poignée attaque</td><td>+${poigneeAtt}</td></tr>`;
-  if(poigneeDef) html+=`<tr><td>Poignée défense</td><td>−${poigneeDef}</td></tr>`;
-  if(chelem) html+=`<tr><td>Chelem ${attAll?'attaque':'défense'} (non annoncé)</td><td>${chelem>0?'+':''}${chelem}</td></tr>`;
-  html+=`<tr class="total"><td>Valeur de la donne</td><td>${v>0?'+':''}${v}</td></tr></table>`;
-  html+=`<h3 style="margin-top:12px;">Marque (${n===3?'preneur ±2, défenseurs ∓1':n===4?'preneur ±3, défenseurs ∓1':G.alone?'seul ±4, défenseurs ∓1':'preneur ±2, appelé ±1, défenseurs ∓1'})</h3>
-    <table class="score-table">`;
-  G.players.forEach((p,i)=>{
-    html+=`<tr><td>${p.emoji} ${p.name}${i===G.me?' (toi)':''}${i===taker?' 👑':''}${n===5&&i===G.partner&&G.partnerKnown?' 🤝':''}</td>
-      <td style="color:${deltas[i]>=0?'#2e7d32':'#c0392b'};font-weight:700;">${deltas[i]>=0?'+':''}${deltas[i]}</td>
-      <td style="color:#7a6a55;">total ${G.marque[i]>=0?'+':''}${G.marque[i]}</td></tr>`;
-  });
-  html+=`</table><p class="small-note">Ton rôle : <b>${role}</b> · somme des marques = ${deltas.reduce((a,b)=>a+b,0)} (contrôle)</p>`;
-  $('#score-detail').innerHTML=html;
-  renderDonnePanel(); renderCrowns();
-  $('#score-overlay').hidden=false;
-  logEv(success?`${contract.label} réussie`:`${contract.label} chutée`);
-}
-/* ================================================================
-   ZOOM CARTE (survol / maintien du doigt)
-   ================================================================ */
-let zoomTimer=null, zoomCard=null;
-function attachZoom(el, c){
-  el.addEventListener('mouseenter',()=>{ zoomTimer=setTimeout(()=>showZoom(c),200); });
-  el.addEventListener('mouseleave',()=>{ clearTimeout(zoomTimer); if($('#zoom-overlay').hidden===false) hideZoom(); });
-  el.addEventListener('touchstart',()=>{ zoomTimer=setTimeout(()=>showZoom(c),200); },{passive:true});
-  el.addEventListener('touchend',()=>clearTimeout(zoomTimer),{passive:true});
-}
-function showZoom(c){
-  zoomCard=c;
-  const z=$('#zoom-card'); z.innerHTML='';
-  const el=cardEl(c); z.appendChild(el);
-  $('#zoom-name').textContent=cardName(c);
-  $('#zoom-overlay').hidden=false;
-}
-function hideZoom(){ $('#zoom-overlay').hidden=true; }
-/* ================================================================
-   PANNEAUX STATS / PROBAS / PAUSE
-   ================================================================ */
-function renderStatsPanel(){
-  const s=G.stats;
-  $('#stats-mode').textContent=`— table à ${G.n}`;
-  const rows=[
-    ['Donnes jouées', s.donnes], ['Contrats pris', s.prises], ['Contrats réussis', s.reussies],
-    ['Taux de réussite', s.prises? Math.round(100*s.reussies/s.prises)+' %':'—'],
-    ['Fois appelé (à 5)', s.appele], ['Poignées déclarées', s.poignees],
-    ['Points gagnés', '+'+s.ptsPlus], ['Points perdus', '−'+s.ptsMoins],
-    ['Petit au bout gagné', s.petitGagne], ['Petit au bout perdu', s.petitPerdu],
-    ['Marque à cette table', (G.marque?G.marque[G.me]:0)],
-  ];
-  $('#stats-grid').innerHTML=rows.map(r=>`<div style="color:#7a6a55;">${r[0]}</div><div style="text-align:right;font-weight:700;">${r[1]}</div>`).join('');
-}
-function updateProbaPanel(){
-  const m={
-    3:{main:"À 3 : en moyenne <b>1 bout, 7 à 8 atouts</b>, 2 rois et 6 figures par main.", chien:"Chien de 6 : bout ≈ 1 chance sur 3,6 · roi ≈ 1 sur 2,8. Le chien renouvelle ¼ du jeu."},
-    4:{main:"À 4 : en moyenne <b>1 bout, 5 à 6 atouts</b>, 1 roi et 4 figures par main.", chien:"Chien de 6 : bout ≈ 21,6 % (≈ 1/4,6) · roi ≈ 27,9 % (≈ 1/3,6). Le chien renouvelle ⅓ du jeu."},
-    5:{main:"À 5 : un peu plus que la moyenne = <b>1 bout, 4 à 5 atouts</b>, 1 roi et 3 figures.", chien:"Chien de 3 : bout ≈ 11,2 % (≈ 1/9) · roi ≈ 14,8 % (≈ 1/7). Le chien renouvelle ⅕ du jeu."},
-  }[G.n];
-  $('#proba-main').innerHTML=m.main;
-  $('#proba-chien').innerHTML=m.chien;
-}
-const THEMES={
-  clair:  {felt:'#58bd7c', dark:'#43a262', light:'#83daa1', name:'Feutrine claire'},
-  classic:{felt:'#4e9e6b', dark:'#3d8557', light:'#63b57f', name:'Feutrine classique'},
-  tournoi:{felt:'#b05a52', dark:'#96463f', light:'#c9756c', name:'Rouge tournoi'},
-  nuit:   {felt:'#5a6f9e', dark:'#475a83', light:'#7187b5', name:'Nuit de club'},
-};
-function renderThemes(){
-  const row=$('#theme-row'); row.innerHTML='';
-  Object.entries(THEMES).forEach(([id,t])=>{
-    const b=document.createElement('button');
-    b.className='cta secondary'; b.style.cssText=`font-size:14px;padding:6px 12px;background:${t.felt};box-shadow:0 3px 0 ${t.dark};`;
-    b.textContent=t.name;
-    b.onclick=()=>applyTheme(id);
-    row.appendChild(b);
-  });
-}
-function applyTheme(id){
-  const t=THEMES[id]; if(!t) return;
-  const r=document.documentElement.style;
-  r.setProperty('--felt',t.felt); r.setProperty('--felt-dark',t.dark); r.setProperty('--felt-light',t.light);
-  store.set('tarot.theme',id);
-}
-function renderSpeeds(){
-  const row=$('#speed-row'); row.innerHTML='';
-  [['Posé',1.4],['Standard',1],['Rapide',0.7]].forEach(([label,v])=>{
-    const b=document.createElement('button');
-    b.className='cta secondary'; b.style.cssText='font-size:14px;padding:6px 12px;';
-    if(SPEED===v) b.style.outline='3px solid var(--accent)';
-    b.textContent=label;
-    b.onclick=()=>{SPEED=v; renderSpeeds();};
-    row.appendChild(b);
-  });
-}
-/* ================================================================
-   NAVIGATION & DÉMARRAGE
-   ================================================================ */
-const NIV_LABELS={1:'1 — Débutant',2:'2 — Initié',3:'3 — Confirmé',4:'4 — Bon joueur',5:'5 — Très bon',6:'6 — Excellent'};
-const CAR_LABELS={1:'très prudent',2:'prudent',3:'équilibré',4:'entreprenant',5:'audacieux',6:'casse-cou'};
-function bindUI(){
-  $('#p-niv').oninput=e=>$('#p-niv-val').textContent=NIV_LABELS[e.target.value];
-  $('#p-car').oninput=e=>$('#p-car-val').textContent=CAR_LABELS[e.target.value];
-  $('#btn-profile-ok').onclick=()=>{
-    PROFILE={pseudo:$('#p-pseudo').value.trim()||'Moi', niveau:+$('#p-niv').value, caractere:+$('#p-car').value};
-    store.set('tarot.profile', JSON.stringify(PROFILE));
-    $('#screen-profile').hidden=true; $('#screen-select').hidden=false;
-    if(audioCtx&&audioCtx.state==='suspended') audioCtx.resume();
-  };
-  $('#btn-back-profile').onclick=()=>{ $('#screen-select').hidden=true; $('#screen-profile').hidden=false; };
-  document.querySelectorAll('.mode-card').forEach(c=>c.onclick=()=>startTable(+c.dataset.mode));
-  $('#btn-home').onclick=quitToSelect;
-  $('#btn-quit').onclick=()=>{ $('#pause-overlay').hidden=true; quitToSelect(); };
-  $('#btn-score-quit').onclick=()=>{ $('#score-overlay').hidden=true; quitToSelect(); };
-  $('#btn-next-deal').onclick=()=>{ $('#score-overlay').hidden=true; newDeal(); };
-  $('#btn-pause').onclick=()=>{ renderThemes(); renderSpeeds(); $('#pause-overlay').hidden=false; };
-  $('#btn-resume').onclick=()=>$('#pause-overlay').hidden=true;
-  $('#btn-music').onclick=toggleMusic;
-  $('#btn-stats').onclick=()=>{ renderStatsPanel(); $('#stats-overlay').hidden=false; };
-  $('#btn-stats-close').onclick=()=>$('#stats-overlay').hidden=true;
-  $('#btn-stats-reset').onclick=()=>{ store.del('tarot.stats.'+G.n); loadStats(); renderStatsPanel(); };
-  $('#btn-proba').onclick=()=>$('#proba-overlay').hidden=false;
-  $('#btn-proba-close').onclick=()=>$('#proba-overlay').hidden=true;
-  $('#btn-edit-profile').onclick=()=>{
-    $('#screen-table').hidden=true; $('#screen-profile').hidden=false;
-    $('#p-pseudo').value=PROFILE.pseudo; $('#p-niv').value=PROFILE.niveau; $('#p-car').value=PROFILE.caractere;
-    $('#p-niv-val').textContent=NIV_LABELS[PROFILE.niveau]; $('#p-car-val').textContent=CAR_LABELS[PROFILE.caractere];
-  };
-  $('#btn-zoom-back').onclick=hideZoom;
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape') hideZoom(); });
-  $('#hand-zone').addEventListener('click',e=>{ if(e.target.id==='hand-zone'||e.target.id==='hand') hideZoom(); });
-}
-function quitToSelect(){
-  // abandon propre : le jeton change → toutes les boucles de la donne s'arrêtent
-  G.dealId=(G.dealId||0)+1;
-  $('#screen-table').hidden=true; $('#screen-select').hidden=false;
-  G.phase='idle';
-  if(G._humanPlay){ const r=G._humanPlay; G._humanPlay=null; r(G.players[G.me].hand[0]||null); }
-  if(G._ecartDone){ const r=G._ecartDone; G._ecartDone=null; r(); }
-}
-/* init */
-bindUI();
-$('#p-pseudo').value=PROFILE.pseudo; $('#p-niv').value=PROFILE.niveau; $('#p-car').value=PROFILE.caractere;
-$('#p-niv-val').textContent=NIV_LABELS[PROFILE.niveau]; $('#p-car-val').textContent=CAR_LABELS[PROFILE.caractere];
-applyTheme(store.get('tarot.theme')||'clair');
-// profil déjà enregistré → on entre directement au club (retour Marc : « il ne garde pas mon profil »)
-if(savedProfile){ $('#screen-profile').hidden=true; $('#screen-select').hidden=false; }
+// V1.2 : code découpé en plusieurs fichiers (limite d'envoi), réassemblé puis exécuté d'un seul bloc
+(async()=>{const f=["v1.2/part1.js", "v1.2/part2.js", "v1.2/part3.js"];try{const t=await Promise.all(f.map(u=>fetch(u,{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(u);return r.text()})));const sc=document.createElement('script');sc.text=t.join('');document.body.appendChild(sc);}catch(e){document.body.insertAdjacentHTML('beforeend','<p style="position:fixed;top:40%;width:100%;text-align:center;color:#fff;font:18px sans-serif">Chargement impossible ('+e.message+'). Recharge la page.</p>');}})();
 </script>
 </body>
 </html>
